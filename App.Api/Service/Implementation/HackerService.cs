@@ -31,7 +31,6 @@ namespace App.Api.Service.Implementation
                         int cnt = 0;
                         if (idItem.Count > 0)
                         {
-                            //idList = new List<ItemMaster>();
                             idItem.ForEach(p =>
                             {
 
@@ -39,10 +38,6 @@ namespace App.Api.Service.Implementation
                             });
                         }
                     }
-                    //else
-                    //{
-                    //    BadRequest("Internal server Error");
-                    //}
                 }
             }
             catch (Exception ex)
@@ -84,9 +79,6 @@ namespace App.Api.Service.Implementation
             List<ItemDetails> itemDetailsList = new List<ItemDetails>();
             try
             {
-                //List<int> itemRootIds = itemList.Select(p => p.Id).Skip(offset).Take(pageSize).ToList();
-                //List<string> itemIds = itemList.Where(p => itemRootIds.Contains(p.Id)).Select(p => p.Value).ToList();
-
                 List<Task<ItemDetails>> itemDetailsTask = new List<Task<ItemDetails>>();
                 foreach (var item in itemIds)
                 {

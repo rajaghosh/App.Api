@@ -77,7 +77,7 @@ namespace App.Api.Controllers
         }
 
         [HttpGet("GetHackerItemList/{offset}")]
-        public async Task<ActionResult<List<ItemDetails>>> CallEvents(int offset)
+        public async Task<ActionResult<List<ItemDetailsDTO>>> CallEvents(int offset)
         {
             var cacheKey = "itemIdDetails";
             int pageSize = 200;
@@ -126,7 +126,7 @@ namespace App.Api.Controllers
 
                 //Our main list will have most of the data, but we shall send only the portion which is needed
                 var ret = itemIdDetails.Where(p => itemIds.Contains(p.Id.ToString()))
-                                .Select(p=> new ItemDetails() { 
+                                .Select(p=> new ItemDetailsDTO() { 
                                     Id= p.Id,
                                     Title = p.Title,
                                     Type = p.Type,

@@ -25,50 +25,30 @@ namespace App.Api
 
             services.AddTransient<IHackerService, HackerService>();
 
-            //services.AddSwaggerGen();
             services.AddControllers();
-
-            //services.AddSwaggerGen();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "Test API",
-                    Description = "A simple example for swagger api information",
-                    TermsOfService = new Uri("https://example.com/terms"),
+                    Title = "App.Api",
+                    Description = "Fetch API template for R System",
+                    //TermsOfService = new Uri("https://localhost:44321/"),
                     Contact = new OpenApiContact
                     {
-                        Name = "Your Name XYZ",
-                        Email = "xyz@gmail.com",
-                        Url = new Uri("https://example.com"),
+                        Name = "Developed By Raja Ghosh",
+                        Email = "s.rajaghosh@gmail.com",
+                        Url = new Uri("https://localhost:44321/"),
                     },
-                    License = new OpenApiLicense
-                    {
-                        Name = "Use under OpenApiLicense",
-                        Url = new Uri("https://example.com/license"),
-                    }
+                    //License = new OpenApiLicense
+                    //{
+                    //    Name = "Use under OpenApiLicense",
+                    //    Url = new Uri("https://localhost:44321/"),
+                    //}
                 });
             });
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAll", builder =>
-                    builder.AllowAnyOrigin()
-                           .AllowAnyMethod()
-                           .AllowAnyHeader());
-            });
-
-            //services.AddOutputCache(options =>
-            //{
-            //    // Add a base policy that applies to all endpoints
-            //    options.AddBasePolicy(basePolicy => basePolicy.Expire(TimeSpan.FromSeconds(120)));
-
-            //    // Add a named policy that applies to selected endpoints
-            //    options.AddPolicy("Expire20", policyBuilder => policyBuilder.Expire(TimeSpan.FromSeconds(20)));
-            //});
-
-            //services.AddOutputCaching();
+            services.AddCors();
 
             services.AddMemoryCache();
         }
@@ -87,7 +67,12 @@ namespace App.Api
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Test1 Api v1");
             });
 
-            app.UseCors("AllowAll");
+            // global cors policy
+            app.UseCors(x => x
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true) // allow any origin
+                .AllowCredentials()); // allow credentials
 
             app.UseHttpsRedirection();
 
