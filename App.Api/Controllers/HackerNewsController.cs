@@ -13,7 +13,7 @@ namespace App.Api.Controllers
     {
         private readonly IMemoryCache _memoryCache;
         private readonly IHackerService _hackerService;
-        
+
         public HackerNewsController(IMemoryCache memoryCache, IHackerService hackerService)
         {
             _memoryCache = memoryCache;
@@ -41,22 +41,17 @@ namespace App.Api.Controllers
                     {
                         AbsoluteExpiration = DateTime.Now.AddSeconds(3600), // Cache for an hour
                         Priority = CacheItemPriority.High
-                        //SlidingExpiration = Cache.No
-                        //SlidingExpiration = TimeSpan.FromSeconds(20)
                     };
 
                     //setting cache entries
                     _memoryCache.Set(cacheKey, idList, cacheExpiryOptions);
                 }
 
-                //Add logic if the particular value is not present in the list 
-
                 return Ok(idList);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
-
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -70,8 +65,7 @@ namespace App.Api.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
-
+                return StatusCode(500, ex.Message);
             }
 
         }
@@ -88,24 +82,24 @@ namespace App.Api.Controllers
 
                 //Recalculate off set
                 //Here page size is 200
-                offset = offset * pageSize; 
+                offset = offset * pageSize;
 
                 List<int> itemRootIds = eventList.Select(p => p.Id).Skip(offset).Take(pageSize).ToList();
                 List<string> itemIds = eventList.Where(p => itemRootIds.Contains(p.Id)).Select(p => p.Value).ToList();
 
                 //We shall retrieve the value to list using cache, even if we dont have anything in the cache to list operation we will get in
-                if (_memoryCache.TryGetValue(cacheKey, out List<ItemDetails> itemIdDetails)? true:true)
+                if (_memoryCache.TryGetValue(cacheKey, out List<ItemDetails> itemIdDetails) ? true : true)
                 {
                     //Now check if the demand of itemIds if not present in the list
                     var check = itemIdDetails?.Where(p => itemIds.Contains(p.Id.ToString())).FirstOrDefault();
-                    
+
                     //if new in demand items are not present in the cache list
                     if (check == null)
                     {
                         var newData = await _hackerService.GetEventDetailsList(itemIds, eventList);
 
                         //Invoke it on 1st occurance
-                        if (itemIdDetails==null)
+                        if (itemIdDetails == null)
                         {
                             itemIdDetails = new List<ItemDetails>();
                         }
@@ -126,8 +120,9 @@ namespace App.Api.Controllers
 
                 //Our main list will have most of the data, but we shall send only the portion which is needed
                 var ret = itemIdDetails.Where(p => itemIds.Contains(p.Id.ToString()))
-                                .Select(p=> new ItemDetailsDTO() { 
-                                    Id= p.Id,
+                                .Select(p => new ItemDetailsDTO()
+                                {
+                                    Id = p.Id,
                                     Title = p.Title,
                                     Type = p.Type,
                                     Url = p.Url
@@ -137,7 +132,7 @@ namespace App.Api.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(500, ex.Message);
 
             }
         }

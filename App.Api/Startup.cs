@@ -33,18 +33,12 @@ namespace App.Api
                     Version = "v1",
                     Title = "App.Api",
                     Description = "Fetch API template for R System",
-                    //TermsOfService = new Uri("https://localhost:44321/"),
                     Contact = new OpenApiContact
                     {
-                        Name = "Developed By Raja Ghosh",
+                        Name = "Raja Ghosh",
                         Email = "s.rajaghosh@gmail.com",
                         Url = new Uri("https://localhost:44321/"),
                     },
-                    //License = new OpenApiLicense
-                    //{
-                    //    Name = "Use under OpenApiLicense",
-                    //    Url = new Uri("https://localhost:44321/"),
-                    //}
                 });
             });
 
@@ -64,7 +58,7 @@ namespace App.Api
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Test1 Api v1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "R System App.Api");
             });
 
             // global cors policy
